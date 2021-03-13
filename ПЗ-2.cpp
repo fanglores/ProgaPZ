@@ -54,11 +54,10 @@ int main()
 	int num1;
 
 	cin >> base1;
-
-	if (base1 > 10) num1 = input(base1);
-	else cin >> num1;
-
+	num1 = input(base1);
 	cin >> base2;
 
+	cout << "10: " << num1 << endl;
+	
 	processor(num1, base2);
 }

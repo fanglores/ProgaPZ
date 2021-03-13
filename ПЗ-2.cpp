@@ -33,15 +33,13 @@ void processor(int num, int b2)		//функция преобразования �
 	int c;
 	while (t >= 1)
 	{
-		c = -1;
-		while (num >= 0)
+		c = 0;
+		while (num >= t)
 		{
 			num -= t;
 			c++;
 		}
 
-		src -= t * c;
-		num = src;
 		t /= b2;
 		if (c < 10) cout << c;
 		else cout << char('A' + c - 10);

@@ -2,7 +2,7 @@
 #include <cmath>
 using namespace std;
 
-int input(int b1)
+int input(int b1)	//функция считывания числа с разделителем пробел
 {
 	char c;
 	int num = 0;
@@ -21,13 +21,13 @@ int input(int b1)
 	return num;
 }
 
-void processor(int num, int b2)
+void processor(int num, int b2)		//функция преобразования числа
 {
 	int src = num;
 
 	int t = 1;
 
-	for (; num > t; t *= b2); //���������� ���� �������
+	for (; num > t; t *= b2); 	//поиск наибольшей степени
 	if (num < t) t /= b2;
 
 	int c;

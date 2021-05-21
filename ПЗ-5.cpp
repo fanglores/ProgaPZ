@@ -61,16 +61,35 @@ void remove_k(point* bp)
 	cp->next = NULL;
 }
 
-void remove_v(point* p)
+void remove_v(point* bp)
 {
+	point* cp = bp;
 	int x, y;
 
 	cout << "\nEnter \"x y\"\n>>";
 	cin >> x >> y;
 
+	while (cp->next != NULL)
+	{
+		if (cp->x == x && cp->y == y)
+		{
+			while (cp->next->next != NULL)
+			{
+				cp->x = cp->next->x;
+				cp->y = cp->next->y;
+				cp = cp->next;
+			}
 
+			cp->x = cp->next->x;
+			cp->y = cp->next->y;
+			delete cp->next->next;
+			cp->next = NULL;
 
+			break;
+		}
 
+		cp = cp->next;
+	}
 }
 
 void edit(point* bp)

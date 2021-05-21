@@ -8,6 +8,7 @@ struct point
 	point* next = NULL;
 };
 
+//searches end of array
 point* search(point* base, bool step = false)
 {
 	if (step) return base->next;
@@ -16,6 +17,7 @@ point* search(point* base, bool step = false)
 	else search(base->next);
 }
 
+//user adds one element
 void add(point* bp)
 {
 	int x, y;
@@ -29,6 +31,7 @@ void add(point* bp)
 	cp->y = y;
 }
 
+//writes one random element
 void write(point* bp)
 {
 	point* cp = search(bp);
@@ -38,6 +41,7 @@ void write(point* bp)
 	cp->y = rand() % 100;
 }
 
+//removes one element by key, using shifting all array (instead of rewriting b_ptr)
 void remove_k(point* bp)
 {
 	int k;
@@ -46,7 +50,13 @@ void remove_k(point* bp)
 	cin >> k;
 
 	point* cp = bp;
-	for (int i = 0; i < k; i++) cp = cp->next;
+	for (int i = 0; i < k && cp->next != NULL; i++) cp = cp->next;
+
+	if (cp->next == NULL)
+	{
+		cout << "Segmentation fault. It seems like we tried to access data beyond the array" << endl;
+		return;
+	}
 
 	while (cp->next->next != NULL)
 	{
@@ -61,18 +71,22 @@ void remove_k(point* bp)
 	cp->next = NULL;
 }
 
+//removes one element as one as was entered
 void remove_v(point* bp)
 {
 	point* cp = bp;
 	int x, y;
+	bool flag = false;
 
 	cout << "\nEnter \"x y\"\n>>";
 	cin >> x >> y;
 
-	while (cp->next != NULL)
+	while (cp->next != NULL && !flag)
 	{
 		if (cp->x == x && cp->y == y)
 		{
+			flag = true;
+
 			while (cp->next->next != NULL)
 			{
 				cp->x = cp->next->x;
@@ -84,14 +98,16 @@ void remove_v(point* bp)
 			cp->y = cp->next->y;
 			delete cp->next->next;
 			cp->next = NULL;
-
-			break;
 		}
 
 		cp = cp->next;
 	}
+
+	if (!flag) cout << "No elements were found";
+
 }
 
+//edits one element by key
 void edit(point* bp)
 {
 	int k, x, y;
@@ -103,12 +119,19 @@ void edit(point* bp)
 	cin >> x >> y;
 
 	point* cp = bp;
-	for (int i = 0; i < k; i++) cp = cp->next;
+	for (int i = 0; i < k && cp->next != NULL; i++) cp = cp->next;
+
+	if (cp->next == NULL)
+	{
+		cout << "Segmentation fault. It seems like we tried to access data beyond the array" << endl;
+		return;
+	}
 
 	cp->x = x;
 	cp->y = y;
 }
 
+//prints all data in array
 void print(point* bp)
 {
 	point* cp = bp;

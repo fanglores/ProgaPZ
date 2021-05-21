@@ -5,108 +5,106 @@ using namespace std;
 struct point
 {
 	int x, y;
+	point* next = NULL;
 };
 
-int n = 2;
+point* search(point* base, bool step = false)
+{
+	if (step) return base->next;
 
-void add(point* p)
+	if (base->next == NULL) return base;
+	else search(base->next);
+}
+
+void add(point* bp)
 {
 	int x, y;
-
-	if (n >= 10)
-	{
-		cout << "Fatal error. Array is full.";
-		return;
-	}
+	point* cp = search(bp);
 
 	cout << "\nEnter \"x y\"\n>>";
 	cin >> x >> y;
 
-	p[n] = { x, y };
-	n++;
+	cp->next = new point;
+	cp->x = x;
+	cp->y = y;
 }
 
-void remove_k(point* p)
+void write(point* bp)
+{
+	point* cp = search(bp);
+
+	cp->next = new point;
+	cp->x = rand() % 100;
+	cp->y = rand() % 100;
+}
+
+void remove_k(point* bp)
 {
 	int k;
 
 	cout << "\nEnter key\n>>";
 	cin >> k;
 
-	if (k < 0 || k > 9)
+	point* cp = bp;
+	for (int i = 0; i < k; i++) cp = cp->next;
+
+	while (cp->next->next != NULL)
 	{
-		cout << "Fatal read error. Try again";
-		return;
+		cp->x = cp->next->x;
+		cp->y = cp->next->y;
+		cp = cp->next;
 	}
 
-	for (int i = k; i < n; i++) p[i] = p[i + 1];
-	n--;
+	cp->x = cp->next->x;
+	cp->y = cp->next->y;
+	delete cp->next->next;
+	cp->next = NULL;
 }
 
 void remove_v(point* p)
 {
-	int x, y, k;
+	int x, y;
 
 	cout << "\nEnter \"x y\"\n>>";
 	cin >> x >> y;
 
-	for (k = 0; k < n; k++) if (p[k].x == x && p[k].y == y) break;
 
-	if (k == n) 
-	{
-		cout << "Fatal error. Element not found";
-		return;
-	}
 
-	for (int i = k; i < n; i++) p[i] = p[i + 1];
-	n--;
+
 }
 
-void write(point* p)
-{
-	if (n >= 10)
-	{
-		cout << "Fatal error. Array is full.";
-		return;
-	}
-
-	p[n] = { rand() % 100, rand() % 100 };
-	n++;
-}
-
-void edit(point* p)
+void edit(point* bp)
 {
 	int k, x, y;
 
 	cout << "\nEnter key\n>>";
 	cin >> k;
 
-	if (k < 0 || k > 9)
-	{
-		cout << "Fatal read error. Try again";
-		return;
-	}
-	
 	cout << "\nEnter \"x y\"\n>>";
 	cin >> x >> y;
 
-	p[k] = { x, y };
+	point* cp = bp;
+	for (int i = 0; i < k; i++) cp = cp->next;
+
+	cp->x = x;
+	cp->y = y;
 }
 
-void print(point *p)
+void print(point* bp)
 {
-	for (int i = 0; i < n; i++) cout << (p + i)->x << " " << (p + i)->y << endl;
+	point* cp = bp;
+	while (cp->next != NULL)
+	{
+		cout << cp->x << " " << cp->y << endl;
+		cp = search(cp, 1);
+	}
 }
-
 
 int main()
 {
 	srand(time(0));
-	point p_array[10];
 	int ans;
-
-	p_array[0] = { rand() % 100, rand() % 100 };
-	p_array[1] = { rand() % 100, rand() % 100 };
+	point* b_ptr = new point;
 
 	while (true)
 	{
@@ -116,21 +114,16 @@ int main()
 
 		switch (ans)
 		{
-			case 0: return 0;
-			case 1: add(p_array); break;
-			case 2: write(p_array); break;
-			case 3: remove_k(p_array); break;
-			case 4: remove_v(p_array); break;
-			case 5: edit(p_array); break;
-			case 6: print(p_array); break;
-			default: cout << "Fatal read error. Try again\n";
+		case 0: return 0;
+		case 1: add(b_ptr); break;
+		case 2: write(b_ptr); break;
+		case 3: remove_k(b_ptr); break;
+		case 4: remove_v(b_ptr); break;
+		case 5: edit(b_ptr); break;
+		case 6: print(b_ptr); break;
+		default: cout << "Fatal read error. Try again\n";
 		}
 
 		system("pause");
 	}
-
-
-
-
-
 }

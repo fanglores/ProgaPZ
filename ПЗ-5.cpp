@@ -9,10 +9,8 @@ struct point
 };
 
 //searches end of array
-point* search(point* base, bool step = false)
+point* search(point* base)
 {
-	if (step) return base->next;
-
 	if (base->next == NULL) return base;
 	else search(base->next);
 }
@@ -138,7 +136,7 @@ void print(point* bp)
 	while (cp->next != NULL)
 	{
 		cout << cp->x << " " << cp->y << endl;
-		cp = search(cp, 1);
+		cp = cp->next;
 	}
 }
 

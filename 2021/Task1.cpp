@@ -50,8 +50,7 @@ void ArrayClass::print()
 void ArrayClass::push_back(int val)
 {
 	int* new_mas = new int[size + 1];
-	//memcpy(new_mas, p, sizeof(int*));
-	for (int i = 0; i < size; i++) new_mas[i] = p[i];
+	memcpy(new_mas, p, size*sizeof(int));
 	new_mas[size] = val;
 
 	size++;

@@ -15,6 +15,8 @@ public:
 	void set(int, int);
 	int get(int);
 	void push_back(int);
+	friend ArrayClass operator + (ArrayClass, ArrayClass);
+	friend ArrayClass operator - (ArrayClass, ArrayClass);
 };
 
 ArrayClass::ArrayClass(int size)
@@ -48,7 +50,7 @@ void ArrayClass::print()
 void ArrayClass::push_back(int val)
 {
 	int* new_mas = new int[size + 1];
-
+	//memcpy(new_mas, p, sizeof(int*));
 	for (int i = 0; i < size; i++) new_mas[i] = p[i];
 	new_mas[size] = val;
 
@@ -81,6 +83,24 @@ int ArrayClass::get(int pos)
 	else return p[pos];
 }
 
+ArrayClass operator + (ArrayClass ac1, ArrayClass ac2)
+{
+	int min_size = ((ac1.size < ac2.size) ? ac1.size : ac2.size);
+	ArrayClass out(min_size);
+	for (int i = 0; i < min_size; i++) out.set(i, ac1.get(i) + ac2.get(i));
+	
+	return out;
+}
+
+ArrayClass operator - (ArrayClass ac1, ArrayClass ac2)
+{
+	int min_size = ((ac1.size < ac2.size) ? ac1.size : ac2.size);
+	ArrayClass out(min_size);
+	for (int i = 0; i < min_size; i++) out.set(i, ac1.get(i) - ac2.get(i));
+
+	return out;
+}
+
 int main()
 {
 	ArrayClass ac1(3);
@@ -96,5 +116,8 @@ int main()
 	ac1.set(101, 1); //Setter error
 	ac1.get(101); //Getter error
 	cout << "Get 3rd element: " << ac1.get(2) << "\n" << endl;
-
+	ArrayClass ac3 = ac1 - ac2;
+	ac3.print();
+	ArrayClass ac4 = ac1 + ac2;
+	ac4.print();
 }

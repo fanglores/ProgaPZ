@@ -8,6 +8,7 @@ class Image
 public:
 	fstream img_src;
 	int* img_array;
+	int width, height;
 	static int img_num;
 
 	Image()
@@ -21,21 +22,15 @@ public:
 		}
 		else cout << "Opened " << filename << endl;
 		img_num++;
-	}
 
-	void iParser()
-	{
 		char* info = new char[54];
 		img_src.read(info, 54);
 
-		int w = *(int*)&info[18];
-		int h = *(int*)&info[22];
+		width = *(int*)&info[18];
+		height = *(int*)&info[22];
 
-		int size = 3 * w * h;
-		char* data = new char[size];
-
-		img_src.read(data, size);
-
+		img_array = new int[width * height];
+		img_src.read(reinterpret_cast<char*>(img_array), width * height);
 	}
 
 	~Image()
@@ -46,9 +41,21 @@ public:
 
 int Image::img_num = 1;
 
+double operator+(const Image &im1, const Image &im2)
+{
+	double sq = 0.0;
+	for (int i = 0; i < im1.width * im1.height; i++)
+		sq += (im1.img_array[i] - im2.img_array[i]) * (im1.img_array[i] - im2.img_array[i]);
+
+	cout << sq << endl;
+	sq = sqrt(sq);
+
+	return sq;
+}
+
 int main()
 {
 	Image a1, a2, a3, a4;
-	cout << "A";
-	a1.iParser();
+	
+	cout << a1 + a4;
 }

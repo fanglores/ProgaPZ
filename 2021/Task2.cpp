@@ -61,6 +61,14 @@ public:
 		p = new_mas;
 	}
 
+	double dist(Array& ar)
+	{
+		int sq = 0.0;
+		for (int i = 0; i < size; i++) sq += (p[i] - ar.p[i]) * (p[i] - ar.p[i]);
+
+		return sqrt(sq);
+	}
+
 	friend ostream& operator << (ostream& os, const Array &ar)
 	{
 		for (int i = 0; i < ar.size; i++) os << ar.p[i] << ' ';
@@ -180,6 +188,8 @@ int main()
 	Array<int> b(5);
 	for (int i = 0; i < 5; i++) b.set(i, 10 - i);
 
+	//cout << a.dist(b);
+
 	a.print();
 	b.print();
 	a = b;
@@ -189,4 +199,6 @@ int main()
 
 	cout << endl;
 	cout << a;
+
+	cout << a.dist(b);
 }

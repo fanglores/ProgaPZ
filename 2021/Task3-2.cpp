@@ -36,26 +36,31 @@ public:
 	~Image()
 	{
 		delete[] img_array;
+		img_src.close();
 	}
 };
 
 int Image::img_num = 1;
 
-double operator+(const Image &im1, const Image &im2)
+double operator+(const Image& im1, const Image& im2)
 {
-	double sq = 0.0;
+	unsigned long int sq = 0;
 	for (int i = 0; i < im1.width * im1.height; i++)
 		sq += (im1.img_array[i] - im2.img_array[i]) * (im1.img_array[i] - im2.img_array[i]);
 
-	cout << sq << endl;
-	sq = sqrt(sq);
-
-	return sq;
+	return sqrt(sqrt(sq));
 }
 
 int main()
 {
 	Image a1, a2, a3, a4;
-	
-	cout << a1 + a4;
+
+	cout << "Image 1 and 2 match = " << a1 + a2 << endl;
+	cout << "Image 1 and 3 match = " << a1 + a3 << "\t- the best match" << endl;	//optional
+	cout << "Image 1 and 4 match = " << a1 + a4 << endl;
+
+	cout << "Image 2 and 3 match = " << a2 + a3 << endl;
+	cout << "Image 2 and 4 match = " << a2 + a4 << endl;
+
+	cout << "Image 3 and 4 match = " << a3 + a4 << endl;
 }

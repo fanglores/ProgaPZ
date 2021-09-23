@@ -126,27 +126,17 @@ public:
 
 	void set(int pos, int val)
 	{
-		if (pos < 0 || pos >= size)
-		{
-			cout << "Setter error. Array out of bounds" << endl;
-			return;
-		}
-		else if (val < -100 || val > 100)
-		{
-			cout << "Setter error. Value out of range" << endl;
-			return;
-		}
-		else p[pos] = val;
+		if (pos < 0 || pos >= size) throw out_of_range("Array out of bounds");
+		if (val < -100 || val > 100) throw invalid_argument("Element out of range");
+		
+		p[pos] = val;
 	}
 
 	int get(int pos)
 	{
-		if (pos < 0 || pos >= size)
-		{
-			cout << "Getter error. Array out of bounds" << endl;
-			return -1;
-		}
-		else return p[pos];
+		if (pos < 0 || pos >= size) throw out_of_range("Array out of bounds");
+		
+		return p[pos];
 	}
 
 	void push_back(int val)
@@ -183,22 +173,36 @@ ArrayClass operator - (ArrayClass ac1, ArrayClass ac2)
 
 int main()
 {
-	Array<int> a(5);
-	for (int i = 0; i < 5; i++) a.set(i, i + 1);
-	Array<int> b(5);
-	for (int i = 0; i < 5; i++) b.set(i, 10 - i);
+	try
+	{
+		ArrayClass ac1(3);
+		for (int i = 0; i < 3; i++) ac1.set(i, i + 1);
 
-	//cout << a.dist(b);
+		ArrayClass ac2(ac1);
 
-	a.print();
-	b.print();
-	a = b;
-	cout << endl;
-	a.print();
-	b.print();
-
-	cout << endl;
-	cout << a;
-
-	cout << a.dist(b);
+		ac1.push_back(4);
+		ac1.print();
+		ac2.print();
+		cout << "Push back works\n" << endl;
+		ac1.set(1, 101); //Setter error
+		ac1.set(101, 1); //Setter error
+		ac1.get(101); //Getter error
+		cout << "Get 3rd element: " << ac1.get(2) << "\n" << endl;
+		ArrayClass ac3 = ac1 - ac2;
+		ac3.print();
+		ArrayClass ac4 = ac1 + ac2;
+		ac4.print();
+	}
+	catch (bad_alloc e)
+	{
+		cout << "Error while initiating array" << endl << e.what() << endl;
+	}
+	catch (out_of_range e)
+	{
+		cout << "Error while accessing array element" << endl << e.what() << endl;
+	}
+	catch (invalid_argument e)
+	{
+		cout << "Error while setting arguments" << endl << e.what() << endl;
+	}
 }

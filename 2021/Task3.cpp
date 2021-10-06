@@ -2,9 +2,8 @@
 #include <iostream>
 using namespace std;
 
-const int n = 100000; //number of strings
-const int l = 2; //lenght of string
-const bool OUT = !((n > 10) || (l > 10));
+const int L = 2; //lenght of string [3..6]
+const int N = pow('z' - 'a' + 1, L); //number of strings
 
 int cid = 0;
 
@@ -17,7 +16,7 @@ public:
 	int uid;
 	string s;
 	int hash;
-	
+
 	Str()
 	{
 		uid = cid;
@@ -29,7 +28,7 @@ public:
 	void encrypt()
 	{
 		int x;
-		for (char c : s) 
+		for (char c : s)
 		{
 			x = (int)(c - 'a' + 1);
 			hash = (hash * k + x) % mod;
@@ -37,30 +36,38 @@ public:
 	}
 };
 
-void randomizer(Str* arr)
+void generator(Str* arr)
 {
-	srand(time(NULL));
+	//generator
+	int div = 'z' - 'a' + 1;
 
-	for (int i = 0; i < n; i++)
-		for (int j = 0; j < l; j++)
-			arr[i].s.push_back(static_cast<char>('a' + rand() % ('z' - 'a' + 1)));
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < L; j++)
+			arr[i].s[j] = i / pow(div, j);
+	}
 }
 
 void h_cmp(Str* arr)
 {
 	cout << "Hash compare start:" << endl;
-	int match = 0;
+	int match = 0, hmatch = 0;
 	auto ts = clock();
 
-	for (int i = 1; i < n; i++)
-		if (arr[0].hash == arr[i].hash)
-		{
-			if (OUT) cout << arr[0].uid << " equals to " << arr[i].uid << endl;
-			match++;
-		}
+	for (int i = 0; i < N; i++)
+		for (int j = i + 1; j < N; j++)
+			if (arr[i].hash == arr[j].hash)
+			{
+				int g;
+				hmatch++;
+
+				for (g = 0; g < L; g++)
+					if (arr[i].s[g] != arr[j].s[g]) break;
+				if (g == L) match++;
+			}
 	
 	auto te = clock();
-	cout << "Hash compare end with " << match << " matches. Elapsed time " << te - ts << endl;
+	cout << "Hash compare end with " << hmatch << " hash matches (" << match << " confirmed). Elapsed time " << te - ts << endl;
 }
 
 void s_cmp(Str* arr)
@@ -69,12 +76,10 @@ void s_cmp(Str* arr)
 	int match = 0;
 	auto ts = clock();
 
-	for (int i = 1; i < n; i++)
-		if (arr[0].s == arr[i].s)
-		{
-			if (OUT) cout << arr[0].uid << " equals to " << arr[i].uid << endl;
-			match++;
-		}
+	for (int i = 0; i < N; i++)
+		for (int j = i + 1; j < N; j++)
+			for (int g = 0; g < L; g++)
+				if (arr[i].s[g] != arr[j].s[g]) break;
 
 	auto te = clock();
 	cout << "String compare end " << match << " matches. Elapsed time " << te - ts << endl;
@@ -82,20 +87,11 @@ void s_cmp(Str* arr)
 
 int main()
 {
-	Str* smas= new Str[n];
-	randomizer(smas);
+	Str* smas = new Str[N];
+	
+	generator(smas);
 
-	if (OUT)
-	{
-		cout << "Generated strings: " << endl;
-		for (int i = 0; i < n; i++)
-		{
-			cout << smas[i].s << endl;
-		}
-		cout << endl << endl;
-	}
-
-	for (int i = 0; i < n; i++) smas[i].encrypt();
+	for (int i = 0; i < N; i++) smas[i].encrypt();
 
 	h_cmp(smas);
 	cout << endl << endl;

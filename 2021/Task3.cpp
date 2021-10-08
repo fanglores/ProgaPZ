@@ -2,8 +2,9 @@
 #include <iostream>
 using namespace std;
 
-const int L = 2; //lenght of string [3..6]
-const int N = pow('z' - 'a' + 1, L); //number of strings
+const int DIV = 'z' - 'a' + 1;
+const int L = 6; //lenght of string [3..6]
+const unsigned long long int N = pow(DIV, L); //number of strings
 
 int cid = 0;
 
@@ -36,16 +37,47 @@ public:
 	}
 };
 
-void generator(Str* arr)
+unsigned long long int pow(int x, int a)
 {
-	//generator
-	int div = 'z' - 'a' + 1;
+	unsigned long long int pw = 1;
+	for (int i = 0; i < a; i++) pw *= x;
 
+	return pw;
+}
+
+void print(Str* arr)
+{
+	cout << endl << string(70, '=') << endl;
 	for (int i = 0; i < N; i++)
 	{
-		for (int j = 0; j < L; j++)
-			arr[i].s[j] = i / pow(div, j);
+		cout << arr[i].uid << ' ' << arr[i].s << endl;
+		getchar();
 	}
+
+	cout << string(70, '=') << endl;
+}
+
+void generator(Str* arr)
+{
+	typedef unsigned long long int ulli;
+
+	ulli dir = N / DIV; //number of character in a row
+	ulli dim = 1;		//number of char groups
+	for (int i = 0; i < L; i++)		//for every string character
+	{
+		cout << "~~~DEBUG~~~\t" << i << " char init" << endl;
+		for(int g = 0; g < dim; g++)				//for each character group
+			for (int j = 0; j < DIV; j++)			//for every letter in alphabet
+				for (ulli k = 0; k < dir; k++)		//for every chunk of strings (chunk == dir)
+				{
+					arr[dir * (j + DIV * g) + k].s.push_back('a' + j);
+				}
+
+		dir /= DIV;
+		dim *= DIV;
+	}
+
+	cout << "~~~DEBUG~~~\tGenerated " << N << " strings" << endl << endl;
 }
 
 void h_cmp(Str* arr)
@@ -90,10 +122,12 @@ int main()
 	Str* smas = new Str[N];
 	
 	generator(smas);
-
+	//print(smas);
+	
 	for (int i = 0; i < N; i++) smas[i].encrypt();
 
 	h_cmp(smas);
 	cout << endl << endl;
 	s_cmp(smas);
+	
 }

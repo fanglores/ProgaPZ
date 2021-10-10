@@ -3,7 +3,7 @@
 using namespace std;
 
 const int DIV = 'z' - 'a' + 1;
-const int L = 6; //lenght of string [3..6]
+const int L = 3; //lenght of string [3..6]
 const unsigned long long int N = pow(DIV, L); //number of strings
 
 int cid = 0;
@@ -99,7 +99,7 @@ void h_cmp(Str* arr)
 			}
 	
 	auto te = clock();
-	cout << "Hash compare end with " << hmatch << " hash matches (" << match << " confirmed). Elapsed time " << te - ts << endl;
+	cout << "Hash compare end with " << hmatch << " hash matches (" << match << " confirmed). Elapsed time " << (double)(te - ts)/CLOCKS_PER_SEC << endl;
 }
 
 void s_cmp(Str* arr)
@@ -114,7 +114,7 @@ void s_cmp(Str* arr)
 				if (arr[i].s[g] != arr[j].s[g]) break;
 
 	auto te = clock();
-	cout << "String compare end " << match << " matches. Elapsed time " << te - ts << endl;
+	cout << "String compare end " << match << " matches. Elapsed time " << (double)(te - ts) / CLOCKS_PER_SEC << endl;
 }
 
 int main()

@@ -108,23 +108,61 @@ public:
 		}
 	}
 
-	void unit_swap(Unit<T>& u1, Unit<T>& u2)
+	void unit_swap(Unit<T>* u1, Unit<T>* u2)
 	{
-		Unit<T>* pprev = u1->prev, pnext = u1->next;
 		T pdata = u1->data;
+		int id = u1->uid;
 
-		u1->prev = u2->prev;
-		u1->next = u2->next;
 		u1->data = u2->data;
+		u1->uid = u2->uid;
 
-		u2->prev = pprev;
-		u2->next = pnext;
 		u2->data = pdata;
+		u2->uid = id;
 	}
+
+
 
 	void sort()
 	{
-		//sort algo
+		Unit<T>* cur = head;
+		if (cur->next == nullptr) return;
+
+		while(cur->next->next != nullptr)
+		{
+			if (cur->calls < cur->next->calls)
+			{
+				unit_swap(cur, cur->next);
+
+				Unit<T>* scur = cur;
+				while (scur->prev != nullptr)
+				{
+					if (scur->calls > scur->prev->calls)
+					{
+						unit_swap(scur, scur->next);
+						scur = scur->prev;
+					}
+					else break;
+				}
+			}
+
+			cur = cur->next;
+		}
+		
+		if (cur->calls < cur->next->calls)
+		{
+			unit_swap(cur, cur->next);
+
+			Unit<T>* scur = cur;
+			while (scur->prev != nullptr)
+			{
+				if (scur->calls > scur->prev->calls)
+				{
+					unit_swap(scur, scur->next);
+					scur = scur->prev;
+				}
+				else break;
+			}
+		}
 	}
 };
 
@@ -137,7 +175,7 @@ int main()
 	DataList->push_back(2);
 	DataList->push_back(3);
 
-	cout << DataList->get(1);
+	DataList->set(2, 3);
 
-	//DataList->print();
+	DataList->print();
 }

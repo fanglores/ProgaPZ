@@ -2,7 +2,7 @@
 using namespace std;
 
 template <class T>
-struct Unit		//а ты просто хранишь дату
+struct Unit
 {
 	T data;
 	Unit<T>* prev = nullptr;
@@ -11,7 +11,7 @@ struct Unit		//а ты просто хранишь дату
 };
 
 template <class T>
-class List		//ты двунаправленный
+class List
 {
 private:
 	Unit<T>* head;
@@ -36,10 +36,17 @@ public:
 	}
 
 	void set(int, T)
-	{}
+	{
+	
+	
+		sort();
+	}
 
 	T get(int)
-	{}
+	{
+	
+		sort();
+	}
 
 	void push_back(T val)
 	{

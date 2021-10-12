@@ -4,30 +4,34 @@ using namespace std;
 template <class T>
 struct Unit
 {
+	int uid;
 	T data;
+
 	Unit<T>* prev = nullptr;
 	Unit<T>* next = nullptr;
+
 	int calls = 0;
+
+	Unit() = delete;
+
+	Unit(int id)
+	{
+		uid = id;
+	}
 };
 
 template <class T>
 class List
 {
 private:
+	int size = 0;
 	Unit<T>* head;
 
 public:
 
 	List() 
 	{
-		head = new Unit<T>;
-	}
-
-	List(Unit<T> &item)
-	{
-		head->prev = item->prev;
-		head->next = item->next;
-		head->data = item->data;
+		head = new Unit<T>(size);
 	}
 
 	~List()
@@ -35,25 +39,61 @@ public:
 		delete[] head;
 	}
 
-	void set(int, T)
+	void set(int id, T val)
 	{
-		//set algo
-		sort();
+		Unit<T>* cur = head;
+		while (cur->uid != id && cur->next != nullptr)
+			cur = cur->next;
+
+		if (cur->uid == id)
+		{
+			cur->calls++;
+			cur->data = val;
+
+			sort();
+		}
+		else
+		{
+			cout << "Setter error:";
+			cout << "No matching records were found" << endl;
+		}
 	}
 
-	T get(int)
+	T get(int id)
 	{
-		//get algo
-		sort();
+		Unit<T>* cur = head;
+		while (cur->uid != id && cur->next != nullptr) 
+			cur = cur->next;
+		
+		if (cur->uid == id)
+		{
+			cur->calls++;
+			sort();
+			return cur->data;
+		}
+		else
+		{
+			cout << "Getter error:";
+			cout << "No matching records were found. Returned first element." << endl;
+			return head->data;
+		}
+
+
+	}
+
+	void push_new(Unit<T>* item)
+	{
+		size++;
+		(item->next) = new Unit<T>(size);
+		(item->next)->prev = item;
 	}
 
 	void push_back(T val)
 	{
 		Unit<T>* cur = head;
 		while (cur->next != nullptr) cur = cur->next;
-
-		cur->next = new Unit<T>;
-		cur->next->prev = cur;
+		
+		push_new(cur);
 		cur->data = val;
 	}
 
@@ -62,6 +102,7 @@ public:
 		Unit<T>* cur = head;
 		while (cur->next != nullptr)
 		{
+			cout << cur->uid << ' ';
 			cout << cur->data << endl;
 			cur = cur->next;
 		}
@@ -96,5 +137,7 @@ int main()
 	DataList->push_back(2);
 	DataList->push_back(3);
 
-	DataList->print();
+	cout << DataList->get(1);
+
+	//DataList->print();
 }

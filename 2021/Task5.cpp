@@ -112,12 +112,15 @@ public:
 	{
 		T pdata = u1->data;
 		int id = u1->uid;
+		int cls = u1->calls;
 
 		u1->data = u2->data;
 		u1->uid = u2->uid;
+		u1->calls = u2->calls;
 
 		u2->data = pdata;
 		u2->uid = id;
+		u2->calls = cls;
 	}
 
 
@@ -134,13 +137,13 @@ public:
 				unit_swap(cur, cur->next);
 
 				Unit<T>* scur = cur;
+
 				while (scur->prev != nullptr)
 				{
-					if (scur->calls > scur->prev->calls)
-					{
+					scur = scur->prev;
+
+					if (scur->calls < scur->next->calls)
 						unit_swap(scur, scur->next);
-						scur = scur->prev;
-					}
 					else break;
 				}
 			}
@@ -153,13 +156,13 @@ public:
 			unit_swap(cur, cur->next);
 
 			Unit<T>* scur = cur;
+
 			while (scur->prev != nullptr)
 			{
-				if (scur->calls > scur->prev->calls)
-				{
+				scur = scur->prev;
+
+				if (scur->calls < scur->next->calls)
 					unit_swap(scur, scur->next);
-					scur = scur->prev;
-				}
 				else break;
 			}
 		}
@@ -171,11 +174,25 @@ int main()
 {
 	List<int>* DataList = new List<int>();
 
+	DataList->push_back(0);
 	DataList->push_back(1);
 	DataList->push_back(2);
 	DataList->push_back(3);
+	DataList->push_back(4);
+	DataList->push_back(5);
+	DataList->push_back(6);
+	DataList->push_back(7);
+	DataList->push_back(8);
+	DataList->push_back(9);
 
-	DataList->set(2, 3);
+	DataList->set(9, 9);
+	DataList->set(9, 9);
+	DataList->set(9, 9);
+
+	DataList->set(5, 5);
+	DataList->set(5, 5);
+
+	DataList->set(0, 0);
 
 	DataList->print();
 }

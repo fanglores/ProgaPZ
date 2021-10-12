@@ -185,14 +185,14 @@ int main()
 	DataList->push_back(8);
 	DataList->push_back(9);
 
-	DataList->set(9, 9);
-	DataList->set(9, 9);
-	DataList->set(9, 9);
+	DataList->get(9);
+	DataList->get(9);
+	DataList->get(9);
 
-	DataList->set(5, 5);
-	DataList->set(5, 5);
+	DataList->get(5);
+	DataList->get(5);
 
-	DataList->set(0, 0);
+	DataList->get(0);
 
 	DataList->print();
 }

@@ -50,7 +50,7 @@ public:
 			cur->calls++;
 			cur->data = val;
 
-			sort();
+			sort(cur);
 		}
 		else
 		{
@@ -68,7 +68,7 @@ public:
 		if (cur->uid == id)
 		{
 			cur->calls++;
-			sort();
+			sort(cur);
 			return cur->data;
 		}
 		else
@@ -125,46 +125,15 @@ public:
 
 
 
-	void sort()
+	void sort(Unit<T>* cur)
 	{
-		Unit<T>* cur = head;
-		if (cur->next == nullptr) return;
-
-		while(cur->next->next != nullptr)
+		while (cur->prev != nullptr)
 		{
-			if (cur->calls < cur->next->calls)
-			{
-				unit_swap(cur, cur->next);
+			if (cur->prev->calls < cur->calls)
+				unit_swap(cur->prev, cur);
+			else break;
 
-				Unit<T>* scur = cur;
-
-				while (scur->prev != nullptr)
-				{
-					scur = scur->prev;
-
-					if (scur->calls < scur->next->calls)
-						unit_swap(scur, scur->next);
-					else break;
-				}
-			}
-
-			cur = cur->next;
-		}
-		
-		if (cur->calls < cur->next->calls)
-		{
-			unit_swap(cur, cur->next);
-
-			Unit<T>* scur = cur;
-
-			while (scur->prev != nullptr)
-			{
-				scur = scur->prev;
-
-				if (scur->calls < scur->next->calls)
-					unit_swap(scur, scur->next);
-				else break;
-			}
+			cur = cur->prev;
 		}
 	}
 };

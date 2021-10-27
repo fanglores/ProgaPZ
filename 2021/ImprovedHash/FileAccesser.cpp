@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sys/stat.h>
+#include <direct.h>
 using namespace std;
 
 extern const int LENGTH;
@@ -10,55 +12,11 @@ extern const long long unsigned int NUMBER_OF_STRINGS;
 //for 1GB file
 const int STRINGS_PER_FILE = 119304647;
 
-/*
-void generate_files_bits()
+bool IsPathExist(const string& s)
 {
-	int* mas = new int[LENGTH];
-	unsigned long long int cnt = 0;
-	short unsigned int file_cnt = 0;
-
-	string path = "d:\\hashdir\\test_";
-	path.push_back(static_cast<char>('0' + LENGTH));
-	path += "\\file0.bin";
-
-	fstream gen_file(path);
-	delete& path;
-
-	while (mas[LENGTH - 1] != ALPHABET_POWER - 1)
-	{
-		if (cnt % STRINGS_PER_FILE == 0)
-		{
-			file_cnt++;
-			string path = "d:\\hashdir\\test_";
-			path.push_back(static_cast<char>('0' + LENGTH));
-			path += "\\file";
-			path.push_back(file_cnt);
-			path += ".bin";
-
-			gen_file = fstream(path);
-			delete& path;
-		}
-
-		//parse bitset to *char
-		//currently is unavailable
-		//gen_file.write();
-
-		cnt++;
-		mas[0]++;
-
-		for (int i = 0; i < LENGTH - 1; i--)
-		{
-			if (mas[i] == ALPHABET_POWER)
-			{
-				mas[i] = 0;
-				mas[i + 1]++;
-			}
-			else break;
-		}
-	}
-
+	struct stat buffer;
+	return (stat(s.c_str(), &buffer) == 0);
 }
-*/
 
 const int k = 31, mod = 1000000007;
 int encrypt(const char* str)
@@ -70,10 +28,16 @@ int encrypt(const char* str)
 	return hash;
 }
 
-void generate_files()
+void generate_files(string dir_path, int len = LENGTH)
 {
-	char* buf = new char[LENGTH];
-	for (int i = 0; i < LENGTH; i++) buf[i] = '0';
+	if (!IsPathExist(dir_path))
+	{
+		if(_mkdir(dir_path.c_str()) != 0) throw exception("Error while creating directory");
+		//create dir hashdir
+	}
+
+	char* buf = new char[len];
+	for (int i = 0; i < len; i++) buf[i] = '0';
 
 	char* ibuf = new char[4];
 	int hash;
@@ -81,13 +45,20 @@ void generate_files()
 	int cnt = 0;
 	char file_cnt = '0';
 	
-	string path = "d:\\hashdir\\test_";
-	path.push_back(static_cast<char>('0' + LENGTH));
+	string path = dir_path + "hashdir\\test_";
+	path.push_back(static_cast<char>('0' + len));
+
+	if (!IsPathExist(path))
+	{
+		if (_mkdir(path.c_str()) != 0) throw exception("Error while creating directory");
+		//create dir test_x
+	}
+
 	path += "\\file";
 
 	fstream gen_file(path + file_cnt + ".bin", ios::out | ios::binary);
 
-	while (buf[LENGTH - 1] <= 'z')
+	while (buf[len - 1] <= 'z')
 	{
 		if (cnt == STRINGS_PER_FILE)
 		{
@@ -97,7 +68,7 @@ void generate_files()
 			gen_file = fstream(path + file_cnt + ".bin", ios::out | ios::binary);
 		}
 
-		gen_file.write(buf, LENGTH);
+		gen_file.write(buf, len);
 
 		hash = encrypt(buf);
 		memcpy(ibuf, &hash, 4);
@@ -106,11 +77,11 @@ void generate_files()
 		cnt++;
 		buf[0]++;
 
-		for (int i = 0; i < LENGTH; i++)
+		for (int i = 0; i < len; i++)
 		{
 				 if (buf[i] == '9' + 1)	 buf[i] = 'A';
 			else if (buf[i] == 'Z' + 1)  buf[i] = 'a';
-			else if (buf[i] == 'z' + 1 && i != LENGTH - 1)
+			else if (buf[i] == 'z' + 1 && i != len - 1)
 			{
 				buf[i] = '0';
 				buf[i + 1]++;

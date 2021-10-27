@@ -60,9 +60,13 @@ void generate_files_bits()
 }
 */
 
+bool IsPathExist(const string& path_to_check);
+
 const int k = 31, mod = 1000000007;
 int encrypt(const char*);
 
-void generate_files();
+void generate_files(string dir_path, int length = LENGTH);
+
+void compare_hash();
 
 void debug_read(int len, int file_n = 0);

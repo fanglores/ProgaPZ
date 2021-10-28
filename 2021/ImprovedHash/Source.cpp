@@ -23,7 +23,8 @@ int main(int argc, char* argv[])
 			system("cls");
 			cout << "Welcome to the hashzone!" << endl << endl;
 			cout << "1. Generate files" << endl;
-			//cout << "2. ";
+			cout << "2. Compare files" << endl;
+			//more options
 			cout << "6. DEBUG reading" << endl << endl << ">>";
 
 			cin >> ans;
@@ -53,22 +54,53 @@ int main(int argc, char* argv[])
 					1			1					<<1
 					2			4					<<1
 					3			136					1.5
-					4			6770				38
-					5			394882				8000
-					6
+					4			6 770				38
+					5			394 882				8 000
+					6			9 540 685			540 627
 					*/
 
 					cout << "Generation of the files for " << LENGTH << " symbols took " << t_en - t_st << " ticks" << endl;
-					cout << "Current TPS is " << CLOCKS_PER_SEC << endl;
+					cout << "Current TPS is " << CLOCKS_PER_SEC << endl << endl;
 				}
 				else cout << "Wrong length!" << endl;
 				
 				break;
 			}
 
+			case 2:
+			{
+				cout << "Enter length of the string(1..6): ";
+				cin >> ln;
+				cin.clear();
+				cin.sync();
+				cout << endl;
+
+				ln = ln - '0';
+				if (ln >= 1 && ln <= 6)
+				{
+					clock_t dt = compare_hash(current_path, int(ln));
+
+					/*
+					LENGTH		TICKS(1000cps)		Collisions
+					1			1					0
+					2			1					0
+					3			2					0
+					4			2					0
+					5
+					6
+					*/
+
+					cout << "\nComparison of the files for " << int(ln) << " symbols took " << dt << " ticks" << endl;
+					cout << "Current TPS is " << CLOCKS_PER_SEC << endl << endl;
+				}
+				else cout << "Wrong length!" << endl;
+
+				break;
+			}
+
 			case 6:
 			{
-				debug_read(LENGTH);
+				debug_read(current_path, LENGTH);
 				break;
 			}
 
@@ -76,7 +108,7 @@ int main(int argc, char* argv[])
 			{
 				cout << "Fatal error. Wrong command" << endl;
 				cout << "Press any key to try again..." << endl;
-				getchar();
+				system("pause");
 
 				f = true;
 			}
@@ -86,7 +118,7 @@ int main(int argc, char* argv[])
 	catch (exception e)
 	{
 		cout << "Fatal error: " << e.what() << endl;
-		getchar();
+		system("pause");
 		return -1;
 	}
 	

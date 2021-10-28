@@ -67,6 +67,6 @@ int encrypt(const char*);
 
 void generate_files(string dir_path, int length = LENGTH);
 
-void compare_hash();
+clock_t compare_hash(string dir_path, int length = LENGTH);
 
-void debug_read(int len, int file_n = 0);
+void debug_read(string dir_path, int len, int file_n = 0);

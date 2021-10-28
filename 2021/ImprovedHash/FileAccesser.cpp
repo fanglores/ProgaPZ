@@ -3,6 +3,7 @@
 #include <string>
 #include <sys/stat.h>
 #include <direct.h>
+#include <time.h>
 using namespace std;
 
 extern const int LENGTH;
@@ -106,7 +107,11 @@ clock_t compare_hash(string dir_path, int len = LENGTH)
 	char* ibuf = new char[4]; char* t_ibuf = new char[4];
 	int hs, t_hs;
 
+	auto tstmp = time(NULL);
+	auto tm = localtime(&tstmp);
+	cout << tm->tm_hour << ':' << tm->tm_min << ':' << tm->tm_sec << ": ";
 	cout << "Init successful! Staring comparison for " << len << "-symbols..." << endl;
+	
 	auto t_st = clock();
 
 	for (int i = 0; i <= max_file; i++)
@@ -165,9 +170,15 @@ clock_t compare_hash(string dir_path, int len = LENGTH)
 				}
 			}	
 		}
+
+		tstmp = time(NULL);
+		tm = localtime(&tstmp);
+		cout << tm->tm_hour << ':' << tm->tm_min << ':' << tm->tm_sec << ": ";
+		cout << "file" << i << " processed..." << endl;
 	}
-	cout << "Colls " << collisions << endl;
 	auto t_en = clock();
+
+	cout << "\nFound collisions: " << collisions << endl;
 
 	return (t_en - t_st);
 }

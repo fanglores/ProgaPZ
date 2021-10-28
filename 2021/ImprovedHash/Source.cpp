@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 					6			9 540 685			540 627
 					*/
 
-					cout << "Generation of the files for " << LENGTH << " symbols took " << t_en - t_st << " ticks" << endl;
+					cout << "Generation of the files for " << int(ln) << " symbols took " << t_en - t_st << " ticks" << endl;
 					cout << "Current TPS is " << CLOCKS_PER_SEC << endl << endl;
 				}
 				else cout << "Wrong length!" << endl;

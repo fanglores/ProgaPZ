@@ -59,9 +59,60 @@ void vector_func()
 		cout << p.first << ' ';
 }
 
+vector<bool> used;
+void dfs(int v, vector<vector<int>> &m) 
+{
+	used[v] = true;
+	for (auto i = m[v].begin(); i != m[v].end(); i++)
+		if (i != 0 && !used[*i])
+			dfs(*i, m);
+}
+
+void stack_func()
+{
+	int N;
+	cin >> N;
+
+	vector<vector<int>> matrix(N, vector<int>(N, 0));
+	used.resize(N, false);
+
+	int x;
+	for (int i = 0; i < N; i++)
+	{
+		matrix[i][i] = 1;	//из вершины всегда можно попасть в неё саму
+
+		do
+		{
+			cin >> x;
+			if (x != 0) matrix[i][x - 1] = 1;
+
+		} while (cin.peek() != '\n');
+	}
+
+	//debug matrix output
+	cout << endl;
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+			cout << matrix[i][j] << ' ';
+		cout << endl;
+	}
+
+	for (int i = 0; i < N; i++) dfs(i + 1, matrix);
+	
+	//debug matrix output
+	cout << endl;
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < N; j++)
+			cout << matrix[i][j] << ' ';
+		cout << endl;
+	}
+}
+
 int main()
 {
 	//map_func();
-	vector_func();
-
+	//vector_func();
+	stack_func();
 }

@@ -6,9 +6,10 @@
 #include <time.h>
 using namespace std;
 
-extern const int LENGTH;
-extern const int ALPHABET_POWER;
-extern const long long unsigned int NUMBER_OF_STRINGS;
+const int ALPHABET_POWER = 62;
+
+int LENGTH;
+long long unsigned int NUMBER_OF_STRINGS;
 
 //for 1GB file
 const int STRINGS_PER_FILE = 119304647;
@@ -29,8 +30,11 @@ int encrypt(const char* str)
 	return hash;
 }
 
-void generate_files(string dir_path, int len = LENGTH)
+void generate_files(string dir_path, int len)
 {
+	LENGTH = len;
+	NUMBER_OF_STRINGS = pow(ALPHABET_POWER, LENGTH);
+
 	dir_path += "hashdir";
 
 	if (!IsPathExist(dir_path))
@@ -90,8 +94,18 @@ void generate_files(string dir_path, int len = LENGTH)
 	delete[] buf;
 }
 
-clock_t compare_hash(string dir_path, int len = LENGTH)
+void print_time()
 {
+	auto tstmp = time(NULL);
+	auto tm = localtime(&tstmp);
+	cout << tm->tm_hour << ':' << tm->tm_min << ':' << tm->tm_sec << ": ";
+}
+
+clock_t compare_hash(string dir_path, int len)
+{
+	LENGTH = len;
+	NUMBER_OF_STRINGS = pow(ALPHABET_POWER, LENGTH);
+
 	int collisions = 0;
 	string path = dir_path + "\\hashdir\\test_" + to_string(len);
 
@@ -107,74 +121,86 @@ clock_t compare_hash(string dir_path, int len = LENGTH)
 	char* ibuf = new char[4]; char* t_ibuf = new char[4];
 	int hs, t_hs;
 
-	auto tstmp = time(NULL);
-	auto tm = localtime(&tstmp);
-	cout << tm->tm_hour << ':' << tm->tm_min << ':' << tm->tm_sec << ": ";
+	print_time();
 	cout << "Init successful! Staring comparison for " << len << "-symbols..." << endl;
 	
 	auto t_st = clock();
 
-	for (int i = 0; i <= max_file; i++)
+	//for each file
+	for (int i = 0; i <= max_file; i++)			
 	{
 		fstream f_file(path + to_string(i) + ".bin", ios::in | ios::binary);
 		int tmp = ((i == max_file) ? (NUMBER_OF_STRINGS) : (STRINGS_PER_FILE));
 
-		for (int j = 0; j < tmp; j++)	//for each str in each file
+		//compare inside first taken file
+		for (int j = 0; j < tmp; j++)		
 		{
 			f_file.seekg((len + 4) * j, f_file.beg);
 
 			f_file.read(buf, len);
 			f_file.read(ibuf, 4);
 			memcpy(&hs, ibuf, 4);
-			//we picked one str to compare with rest
 
-			//now lets compare
-			for (int j2 = j + 1; j2 < tmp; j2++)	//for each next str in CURRENT file
+			for (int j1 = j + 1; j1 < tmp; j1++)
 			{
+				f_file.seekg((len + 4) * j1, f_file.beg);
+
 				f_file.read(t_buf, len);
 				f_file.read(t_ibuf, 4);
 				memcpy(&t_hs, t_ibuf, 4);
 
-				/*
-				//debug out
-				for (int d = 0; d < len; d++) cout << buf[d];
-				cout << " & ";
-				for (int d = 0; d < len; d++) cout << t_buf[d];
-				cout << endl;
-				getchar();
-				*/
-				if (hs == t_hs) collisions++;
+				if (hs == t_hs)
+				{
+					/*
+					//debug collision check
+					for (int g = 0; g < len; g++) cout << buf[g];
+					cout << ' ' << hs << " & ";
+					for (int g = 0; g < len; g++) cout << t_buf[g];
+					cout << ' ' << t_hs << endl << endl;
+					*/
+					collisions++;
+				}
 			}
+		}
+		
+		print_time();
+		cout << "first iteration for file" << i << " completed" << endl;
 
-			//rest each files
-			for (int i2 = i + 1; i2 <= max_file; i2++)
+		//for each next file
+		for (int i1 = i + 1; i1 <= max_file; i1++)
+		{
+			fstream s_file(path + to_string(i1) + ".bin", ios::in | ios::binary);
+			int tmp1 = ((i1 == max_file) ? (NUMBER_OF_STRINGS) : (STRINGS_PER_FILE));
+
+			f_file.seekg(0, f_file.beg);
+
+			//compare each str in file
+			for (int j = 0; j < tmp; j++)		
 			{
-				fstream s_file(path + to_string(i2) + ".bin", ios::in | ios::binary);
-				int tmp2 = ((i2 == max_file) ? (NUMBER_OF_STRINGS) : (STRINGS_PER_FILE));
+				f_file.read(buf, len);
+				f_file.read(ibuf, 4);
+				memcpy(&hs, ibuf, 4);
 
-				for (int j2 = 0; j2 < tmp2; j2++)	//for each str in each next file
+				//with each str in file+1
+				for (int j1 = 0; j1 < tmp1; j1++)
 				{
 					s_file.read(t_buf, len);
 					s_file.read(t_ibuf, 4);
 					memcpy(&t_hs, t_ibuf, 4);
 
-					/*
-					//debug out
-					for (int d = 0; d < len; d++) cout << buf[d];
-					cout << " & ";
-					for (int d = 0; d < len; d++) cout << t_buf[d];
-					cout << endl;
-					getchar();
-					*/
 					if (hs == t_hs) collisions++;
 				}
-			}	
+			}
+
+			print_time();
+			cout << "second iteration for file" << i << " with file" << i1 << " completed" << endl;
+			s_file.close();
 		}
 
-		tstmp = time(NULL);
-		tm = localtime(&tstmp);
-		cout << tm->tm_hour << ':' << tm->tm_min << ':' << tm->tm_sec << ": ";
+		print_time();
 		cout << "file" << i << " processed..." << endl;
+
+		f_file.close();
 	}
 	auto t_en = clock();
 
@@ -184,28 +210,34 @@ clock_t compare_hash(string dir_path, int len = LENGTH)
 }
 
 
-void debug_read(string path, int l, int f = 0)
+
+
+
+void debug_read(string path, int len, int f = 0)
 {
-	cout << "Reading file" << f << " from " << l << "-symbols. Press any key to confirm" << endl;
+	LENGTH = len;
+	NUMBER_OF_STRINGS = pow(ALPHABET_POWER, LENGTH);
+
+	cout << "Reading file" << f << " from " << len << "-symbols. Press any key to confirm" << endl;
 	cin.clear();
 	cin.sync();
 	getchar();
 
-	path += "\\hashdir\\test_" + to_string(l) + "\\file" + to_string(f) + ".bin";
+	path += "\\hashdir\\test_" + to_string(len) + "\\file" + to_string(f) + ".bin";
 
 	fstream read_file(path, ios::in | ios::binary);
 
-	char* buf = new char[l];
+	char* buf = new char[len];
 	char* ibuf = new char[4];
 	int hs;
 
 	for (int k = 0; k < STRINGS_PER_FILE && k < NUMBER_OF_STRINGS; k++)
 	{
-		read_file.read(buf,  l);
+		read_file.read(buf,  len);
 		read_file.read(ibuf, 4);
 		memcpy(&hs, ibuf, 4);
 
-		for (int i = 0; i < l; i++) cout << buf[i];
+		for (int i = 0; i < len; i++) cout << buf[i];
 		cout << ' ' << hs << endl;
 	}
 

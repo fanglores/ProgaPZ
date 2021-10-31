@@ -2,12 +2,6 @@
 #include <string>
 #include "FileAccesser.h"
 
-const int ALPHABET_POWER = 62;
-//length of string [3..6]
-const int LENGTH = 1; 
-//number of strings
-const unsigned long long int NUMBER_OF_STRINGS = pow(ALPHABET_POWER, LENGTH); 
-
 int main(int argc, char* argv[])
 {
 	try
@@ -100,7 +94,15 @@ int main(int argc, char* argv[])
 
 			case 6:
 			{
-				debug_read(current_path, LENGTH);
+				cout << "Enter length of the string(1..6): ";
+				cin >> ln;
+				cin.clear();
+				cin.sync();
+				cout << endl;
+
+				ln = ln - '0';
+
+				debug_read(current_path, int(ln));
 				break;
 			}
 

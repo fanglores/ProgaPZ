@@ -3,9 +3,6 @@
 #include <string>
 using namespace std;
 
-extern const int LENGTH;
-extern const int ALPHABET_POWER;
-extern const long long unsigned int NUMBER_OF_STRINGS;
 
 //for 1GB file
 const int STRINGS_PER_FILE = 119304647;
@@ -65,8 +62,10 @@ bool IsPathExist(const string& path_to_check);
 const int k = 31, mod = 1000000007;
 int encrypt(const char*);
 
-void generate_files(string dir_path, int length = LENGTH);
+void generate_files(string dir_path, int length);
 
-clock_t compare_hash(string dir_path, int length = LENGTH);
+clock_t compare_hash(string dir_path, int length);
 
 void debug_read(string dir_path, int len, int file_n = 0);
+
+void print_time();

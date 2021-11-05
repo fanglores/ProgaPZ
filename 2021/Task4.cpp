@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <stack>
 using namespace std;
 
 void map_func()
@@ -37,7 +38,7 @@ void vector_func()
 	{
 		a = rand() % 201 - 100;
 		sum1 += a;
-	
+
 		cout << a << ' ';
 	}
 
@@ -59,28 +60,45 @@ void vector_func()
 		cout << p.first << ' ';
 }
 
-vector<bool> used;
-void dfs(int v, vector<vector<int>> &m) 
-{
-	used[v] = true;
-	for (auto i = m[v].begin(); i != m[v].end(); i++)
-		if (i != 0 && !used[*i])
-			dfs(*i, m);
-}
 
+void dfs(int v, vector<vector<int>>& m)
+{
+	vector<bool> used(m.size(), false);
+	stack<int> q;
+
+	while (v != -1)
+	{
+		if (used[v] == false)
+		{
+			used[v] = true;
+
+			for (int i = 0; i < m.size(); i++)
+				if (m[v][i] == 1 && used[i] == false) q.push(i);
+		}
+
+		if (q.size() > 0)
+		{
+			v = q.top();
+			q.pop();
+		}
+		else v = -1;
+	}
+
+	//print row of attainability
+	for (bool a : used) cout << a << ' ';
+	cout << endl;
+}
+		
 void stack_func()
 {
 	int N;
 	cin >> N;
 
 	vector<vector<int>> matrix(N, vector<int>(N, 0));
-	used.resize(N, false);
 
 	int x;
 	for (int i = 0; i < N; i++)
 	{
-		matrix[i][i] = 1;	//из вершины всегда можно попасть в неё саму
-
 		do
 		{
 			cin >> x;
@@ -89,6 +107,7 @@ void stack_func()
 		} while (cin.peek() != '\n');
 	}
 
+	/*
 	//debug matrix output
 	cout << endl;
 	for (int i = 0; i < N; i++)
@@ -97,17 +116,10 @@ void stack_func()
 			cout << matrix[i][j] << ' ';
 		cout << endl;
 	}
+	cout << endl << endl;
+	*/
 
-	for (int i = 0; i < N; i++) dfs(i + 1, matrix);
-	
-	//debug matrix output
-	cout << endl;
-	for (int i = 0; i < N; i++)
-	{
-		for (int j = 0; j < N; j++)
-			cout << matrix[i][j] << ' ';
-		cout << endl;
-	}
+	for (int i = 0; i < N; i++) dfs(i, matrix);
 }
 
 int main()

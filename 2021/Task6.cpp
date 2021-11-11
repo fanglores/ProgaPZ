@@ -30,7 +30,7 @@ public:
 		height = *(int*)&info[22];
 
 		img_array = new char[width * height];
-		img_src.read(reinterpret_cast<char*>(img_array), width * height);
+		img_src.read(img_array, width * height);
 	}
 
 	~Image()
@@ -59,15 +59,14 @@ int main()
 	cout << "Image 1 and 1 match = " << a1 + a1 << endl;
 	cout << "Image 2 and 2 match = " << a2 + a2 << endl;
 	cout << "Image 3 and 3 match = " << a3 + a3 << endl;
-	cout << "Image 4 and 4 match = " << a4 + a4 << endl;
-	cout << endl;
+	cout << "Image 4 and 4 match = " << a4 + a4 << endl << endl;
 
 	cout << "Image 1 and 2 match = " << a1 + a2 << endl;
-	cout << "Image 1 and 3 match = " << a1 + a3 << endl;	//optional
-	cout << "Image 1 and 4 match = " << a1 + a4 << endl;
+	cout << "Image 1 and 3 match = " << a1 + a3 << endl;
+	cout << "Image 1 and 4 match = " << a1 + a4 << endl << endl;
 
 	cout << "Image 2 and 3 match = " << a2 + a3 << endl;
-	cout << "Image 2 and 4 match = " << a2 + a4 << endl;
+	cout << "Image 2 and 4 match = " << a2 + a4 << endl << endl;
 
 	cout << "Image 3 and 4 match = " << a3 + a4 << endl;
 }

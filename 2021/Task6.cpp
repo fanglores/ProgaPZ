@@ -7,7 +7,7 @@ class Image
 {
 public:
 	fstream img_src;
-	int* img_array;
+	char* img_array;
 	int width, height;
 	static int img_num;
 
@@ -29,7 +29,7 @@ public:
 		width = *(int*)&info[18];
 		height = *(int*)&info[22];
 
-		img_array = new int[width * height];
+		img_array = new char[width * height];
 		img_src.read(reinterpret_cast<char*>(img_array), width * height);
 	}
 
@@ -55,8 +55,15 @@ int main()
 {
 	Image a1, a2, a3, a4;
 
+	cout << endl;
+	cout << "Image 1 and 1 match = " << a1 + a1 << endl;
+	cout << "Image 2 and 2 match = " << a2 + a2 << endl;
+	cout << "Image 3 and 3 match = " << a3 + a3 << endl;
+	cout << "Image 4 and 4 match = " << a4 + a4 << endl;
+	cout << endl;
+
 	cout << "Image 1 and 2 match = " << a1 + a2 << endl;
-	cout << "Image 1 and 3 match = " << a1 + a3 << "\t- the best match" << endl;	//optional
+	cout << "Image 1 and 3 match = " << a1 + a3 << endl;	//optional
 	cout << "Image 1 and 4 match = " << a1 + a4 << endl;
 
 	cout << "Image 2 and 3 match = " << a2 + a3 << endl;

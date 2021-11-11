@@ -29,8 +29,8 @@ public:
 		width = *(int*)&info[18];
 		height = *(int*)&info[22];
 
-		img_array = new char[width * height];
-		img_src.read(img_array, width * height);
+		img_array = new char[3 * width * height];
+		img_src.read(img_array, 3 * width * height);
 	}
 
 	~Image()
@@ -45,7 +45,7 @@ int Image::img_num = 1;
 double operator+(const Image& im1, const Image& im2)
 {
 	unsigned long int sq = 0;
-	for (int i = 0; i < im1.width * im1.height; i++)
+	for (int i = 0; i < 3 * im1.width * im1.height; i++)
 		sq += (im1.img_array[i] - im2.img_array[i]) * (im1.img_array[i] - im2.img_array[i]);
 
 	return sqrt(sqrt(sq));

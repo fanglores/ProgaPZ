@@ -18,8 +18,9 @@ int main(int argc, char* argv[])
 			system("cls");
 			cout << "Welcome to the hashzone!" << endl << endl;
 			cout << "1. Generate files" << endl;
-			cout << "2. Compare files" << endl;
-			cout << "3. Compare files via RAM" << endl;
+			cout << "2. Compare hashes via disk (not recommended)" << endl;
+			cout << "3. Compare hashes via RAM" << endl;
+			cout << "4. Compare strings via RAM" << endl;
 			//more options
 			cout << "6. DEBUG reading" << endl << endl << ">>";
 
@@ -105,9 +106,30 @@ int main(int argc, char* argv[])
 				ln = ln - '0';
 				if (ln >= 1 && ln <= 6)
 				{
-					clock_t dt = compare_ram(current_path, int(ln));
+					clock_t dt = hash_ram(current_path, int(ln));
 
-					cout << "\nComparison of the files for " << int(ln) << " symbols took " << dt << " ticks" << endl;
+					cout << "\nComparison(hash) of the files for " << int(ln) << " symbols took " << dt << " ticks" << endl;
+					cout << "Current TPS is " << CLOCKS_PER_SEC << endl << endl;
+				}
+				else cout << "Wrong length!" << endl;
+
+				break;
+			}
+
+			case 4:
+			{
+				cout << "Enter length of the string(1..6): ";
+				cin >> ln;
+				cin.clear();
+				cin.sync();
+				cout << endl;
+
+				ln = ln - '0';
+				if (ln >= 1 && ln <= 6)
+				{
+					clock_t dt = str_ram(current_path, int(ln));
+
+					cout << "\nComparison(string) of the files for " << int(ln) << " symbols took " << dt << " ticks" << endl;
 					cout << "Current TPS is " << CLOCKS_PER_SEC << endl << endl;
 				}
 				else cout << "Wrong length!" << endl;

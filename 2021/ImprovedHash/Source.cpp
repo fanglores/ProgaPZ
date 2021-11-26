@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "FileAccesser.h"
+#include "RamAccesser.h"
 
 int main(int argc, char* argv[])
 {
@@ -18,6 +19,7 @@ int main(int argc, char* argv[])
 			cout << "Welcome to the hashzone!" << endl << endl;
 			cout << "1. Generate files" << endl;
 			cout << "2. Compare files" << endl;
+			cout << "3. Compare files via RAM" << endl;
 			//more options
 			cout << "6. DEBUG reading" << endl << endl << ">>";
 
@@ -83,6 +85,27 @@ int main(int argc, char* argv[])
 					5
 					6
 					*/
+
+					cout << "\nComparison of the files for " << int(ln) << " symbols took " << dt << " ticks" << endl;
+					cout << "Current TPS is " << CLOCKS_PER_SEC << endl << endl;
+				}
+				else cout << "Wrong length!" << endl;
+
+				break;
+			}
+
+			case 3:
+			{
+				cout << "Enter length of the string(1..6): ";
+				cin >> ln;
+				cin.clear();
+				cin.sync();
+				cout << endl;
+
+				ln = ln - '0';
+				if (ln >= 1 && ln <= 6)
+				{
+					clock_t dt = compare_ram(current_path, int(ln));
 
 					cout << "\nComparison of the files for " << int(ln) << " symbols took " << dt << " ticks" << endl;
 					cout << "Current TPS is " << CLOCKS_PER_SEC << endl << endl;

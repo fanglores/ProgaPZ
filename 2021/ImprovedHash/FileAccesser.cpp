@@ -104,7 +104,7 @@ void print_time()
 clock_t compare_hash(string dir_path, int len)
 {
 	LENGTH = len;
-	NUMBER_OF_STRINGS = pow(ALPHABET_POWER, LENGTH);
+	NUMBER_OF_STRINGS = long long int(pow(ALPHABET_POWER, LENGTH)) % STRINGS_PER_FILE;
 
 	int collisions = 0;
 	string path = dir_path + "\\hashdir\\test_" + to_string(len);
